@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Zuckky - VVEditor{% endblock %}
+
+{% block content %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Zuckky - VVEditor</title>
+        
+        <!-- Load Static Files -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">Z</div>
+                <div class="logo-text">Zuckky</div>
+            </div>
+
+            <button class="new-video-btn" onclick="showWelcome()">+ New Video Edit</button>
+
+            <div class="sidebar-section">
+                <div class="section-title">Recent</div>
+                <div class="sidebar-item active">
+                    <span>📹</span>
+                    <span>Business Coach Video</span>
+                </div>
+                <div class="sidebar-item">
+                    <span>🎬</span>
+                    <span>Product Launch Reel</span>
+                </div>
+                <div class="sidebar-item">
+                    <span>✨</span>
+                    <span>Testimonial Edit</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Templates</div>
+                <div class="sidebar-item">
+                    <span>⚡</span>
+                    <span>Alex Hormozi Style</span>
+                </div>
+                <div class="sidebar-item">
+                    <span>🎯</span>
+                    <span>Iman Gadzhi Style</span>
+                </div>
+                <div class="sidebar-item">
+                    <span>🔥</span>
+                    <span>Gary Vee Style</span>
+                </div>
+            </div>
+
+            <div class="credits-display">
+                <div class="credits-label">Editing Credits</div>
+                <div class="credits-amount">32</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">VVEditor</div>
+                <div class="user-menu">
+                    <div class="user-avatar">JD</div>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Welcome Screen -->
+                <div id="welcomeScreen">
+                    <div class="welcome-message">
+                        <div class="welcome-title">Ready to create viral content?</div>
+                        <div class="welcome-subtitle">Upload your raw footage and let AI transform it into professional edits</div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <div class="quick-action-card" onclick="startUpload()">
+                            <div class="action-icon">📤</div>
+                            <div class="action-title">Upload Video</div>
+                            <div class="action-desc">Start with your raw footage</div>
+                        </div>
+                        <div class="quick-action-card" onclick="showTemplates()">
+                            <div class="action-icon">🎨</div>
+                            <div class="action-title">Browse Templates</div>
+                            <div class="action-desc">Explore viral editing styles</div>
+                        </div>
+                        <div class="quick-action-card" onclick="startUpload()">
+                            <div class="action-icon">💡</div>
+                            <div class="action-title">Quick Start</div>
+                            <div class="action-desc">Upload and let AI choose style</div>
+                        </div>
+                        <div class="quick-action-card" onclick="showHelp()">
+                            <div class="action-icon">❓</div>
+                            <div class="action-title">Get Help</div>
+                            <div class="action-desc">Learn how to use Zuckky</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    
+                    <!-- Left controls -->
+                    <div class="input-controls-left">
+                        <button class="input-action-btn" onclick="handleAction('upload-files')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+
+                    <!-- Textarea Input -->
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput"
+                        placeholder="Upload Your Raw Video Recording and Get A Professionally Edited Video"
+                        rows="1"
+                        onkeydown="handleKeyPress(event)"
+                    ></textarea>
+
+                    <!-- Right controls -->
+                    <div class="input-controls-right-cluster">
+                        <button class="tools-btn" onclick="handleAction('ai-tools')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+                            </svg>
+                            <span>Tools</span>
+                        </button>
+                        <button class="send-btn" onclick="sendMessage()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load JavaScript -->
+        <script src="{% static 'js/app.js' %}"></script>
+    </body>
+    </html>
+{% endblock %}

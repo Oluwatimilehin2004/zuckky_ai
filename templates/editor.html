@@ -4,154 +4,391 @@
 
 {% block content %}
     <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Zuckky - VVEditor</title>
-        
-        <!-- Load Static Files -->
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    </head>
-    <body>
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo">
-                <div class="logo-icon">Z</div>
-                <div class="logo-text">Zuckky</div>
-            </div>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Zuckky - VVEditor</title>
+            
+            <!-- Load Static Files -->
+            {% load static %}
+            <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        </head>
+        <body>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="logo">
+                    <div class="logo-icon">Z</div>
+                    <div class="logo-text">Zuckky</div>
+                </div>
 
-            <button class="new-video-btn" onclick="showWelcome()">+ New Video Edit</button>
+                <button class="new-video-btn" onclick="showWelcome()">+ New Video Edit</button>
 
-            <div class="sidebar-section">
-                <div class="section-title">Recent</div>
-                <div class="sidebar-item active">
-                    <span>📹</span>
-                    <span>Business Coach Video</span>
-                </div>
-                <div class="sidebar-item">
-                    <span>🎬</span>
-                    <span>Product Launch Reel</span>
-                </div>
-                <div class="sidebar-item">
-                    <span>✨</span>
-                    <span>Testimonial Edit</span>
-                </div>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="section-title">Templates</div>
-                <div class="sidebar-item">
-                    <span>⚡</span>
-                    <span>Alex Hormozi Style</span>
-                </div>
-                <div class="sidebar-item">
-                    <span>🎯</span>
-                    <span>Iman Gadzhi Style</span>
-                </div>
-                <div class="sidebar-item">
-                    <span>🔥</span>
-                    <span>Gary Vee Style</span>
-                </div>
-            </div>
-
-            <div class="credits-display">
-                <div class="credits-label">Editing Credits</div>
-                <div class="credits-amount">32</div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="header-title">VVEditor</div>
-                <div class="user-menu">
-                    <div class="user-avatar">JD</div>
-                </div>
-            </div>
-
-            <!-- Chat Container -->
-            <div class="chat-container" id="chatContainer">
-                <!-- Welcome Screen -->
-                <div id="welcomeScreen">
-                    <div class="welcome-message">
-                        <div class="welcome-title">Ready to create viral content?</div>
-                        <div class="welcome-subtitle">Upload your raw footage and let AI transform it into professional edits</div>
+                <div class="sidebar-section">
+                    <div class="section-title">Recent</div>
+                    <div class="sidebar-item active">
+                        <span>📹</span>
+                        <span>Business Coach Video</span>
                     </div>
-
-                    <div class="quick-actions">
-                        <div class="quick-action-card" onclick="startUpload()">
-                            <div class="action-icon">📤</div>
-                            <div class="action-title">Upload Video</div>
-                            <div class="action-desc">Start with your raw footage</div>
-                        </div>
-                        <div class="quick-action-card" onclick="showTemplates()">
-                            <div class="action-icon">🎨</div>
-                            <div class="action-title">Browse Templates</div>
-                            <div class="action-desc">Explore viral editing styles</div>
-                        </div>
-                        <div class="quick-action-card" onclick="startUpload()">
-                            <div class="action-icon">💡</div>
-                            <div class="action-title">Quick Start</div>
-                            <div class="action-desc">Upload and let AI choose style</div>
-                        </div>
-                        <div class="quick-action-card" onclick="showHelp()">
-                            <div class="action-icon">❓</div>
-                            <div class="action-title">Get Help</div>
-                            <div class="action-desc">Learn how to use Zuckky</div>
-                        </div>
+                    <div class="sidebar-item">
+                        <span>🎬</span>
+                        <span>Product Launch Reel</span>
+                    </div>
+                    <div class="sidebar-item">
+                        <span>✨</span>
+                        <span>Testimonial Edit</span>
                     </div>
                 </div>
 
-                <!-- Chat Messages -->
-                <div class="chat-messages" id="chatMessages" style="display: none;">
+                <div class="sidebar-section">
+                    <div class="section-title">Templates</div>
+                    <div class="sidebar-item" onclick="selectStyle('alex_hormozi')">
+                        <span>⚡</span>
+                        <span>Alex Hormozi Style</span>
+                    </div>
+                    <div class="sidebar-item" onclick="selectStyle('iman_gadzhi')">
+                        <span>🎯</span>
+                        <span>Iman Gadzhi Style</span>
+                    </div>
+                    <div class="sidebar-item" onclick="selectStyle('gary_vee')">
+                        <span>🔥</span>
+                        <span>Gary Vee Style</span>
+                    </div>
+                </div>
+
+                <div class="credits-display">
+                    <div class="credits-label">Editing Credits</div>
+                    <div class="credits-amount">32</div>
                 </div>
             </div>
 
-            <!-- Chat Input -->
-            <div class="chat-input-container">
-                <div class="chat-input-wrapper">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Header -->
+                <div class="header">
+                    <div class="header-title">VVEditor</div>
+                    <div class="user-menu">
+                        <div class="user-avatar">JD</div>
+                    </div>
+                </div>
+
+                <!-- Chat Container -->
+                <div class="chat-container" id="chatContainer">
+                    <!-- Welcome Screen -->
+                    <div id="welcomeScreen">
+                        <div class="welcome-message">
+                            <div class="welcome-title">Ready to create viral content?</div>
+                            <div class="welcome-subtitle">Upload your raw footage and let AI transform it into professional edits</div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <div class="quick-action-card" onclick="startUpload()">
+                                <div class="action-icon">📤</div>
+                                <div class="action-title">Upload Video</div>
+                                <div class="action-desc">Start with your raw footage</div>
+                            </div>
+                            <div class="quick-action-card" onclick="showTemplates()">
+                                <div class="action-icon">🎨</div>
+                                <div class="action-title">Browse Templates</div>
+                                <div class="action-desc">Explore viral editing styles</div>
+                            </div>
+                            <div class="quick-action-card" onclick="startUpload()">
+                                <div class="action-icon">💡</div>
+                                <div class="action-title">Quick Start</div>
+                                <div class="action-desc">Upload and let AI choose style</div>
+                            </div>
+                            <div class="quick-action-card" onclick="showHelp()">
+                                <div class="action-icon">❓</div>
+                                <div class="action-title">Get Help</div>
+                                <div class="action-desc">Learn how to use Zuckky</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages -->
+                    <div class="chat-messages" id="chatMessages" style="display: none;">
+                    </div>
+
+                    <!-- Video Upload Section -->
+                    <div id="videoUploadSection" style="display: none;">
+                        <div class="upload-area">
+                            <div class="upload-icon">📤</div>
+                            <div class="upload-title">Upload Your Raw Video</div>
+                            <div class="upload-subtitle">Drag & drop your video file or click to browse</div>
+                            <input type="file" id="videoUpload" accept="video/*" style="display: none;" onchange="handleVideoSelect()">
+                            <button class="upload-btn" onclick="document.getElementById('videoUpload').click()">Choose Video File</button>
+                        </div>
+                    </div>
+
+                    <!-- Style Selection Section -->
+                    <div id="styleSelectionSection" style="display: none;">
+                        <div class="style-selection">
+                            <div class="style-title">Choose Your Editing Style</div>
+                            <div class="style-subtitle">Select a template style for your video</div>
+                            
+                            <div class="style-options">
+                                <div class="style-option" onclick="selectStyle('alex_hormozi')">
+                                    <div class="style-icon">⚡</div>
+                                    <div class="style-info">
+                                        <div class="style-name">Alex Hormozi</div>
+                                        <div class="style-desc">Fast cuts, bold text, high energy</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="style-option" onclick="selectStyle('iman_gadzhi')">
+                                    <div class="style-icon">🎯</div>
+                                    <div class="style-info">
+                                        <div class="style-name">Iman Gadzhi</div>
+                                        <div class="style-desc">Cinematic, smooth B-roll</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="style-option" onclick="selectStyle('gary_vee')">
+                                    <div class="style-icon">🔥</div>
+                                    <div class="style-info">
+                                        <div class="style-name">Gary Vee</div>
+                                        <div class="style-desc">Authentic, raw, engaging</div>
+                                    </div>
+                                </div>
+
+                                <div class="style-option" onclick="selectStyle('custom')">
+                                    <div class="style-icon">✨</div>
+                                    <div class="style-info">
+                                        <div class="style-name">Custom Style</div>
+                                        <div class="style-desc">Fully customized editing (Advanced)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Result Section -->
+                    <div id="resultSection" style="display: none;">
+                        <div class="result-container">
+                            <div class="result-title">🎉 Your Edited Video is Ready!</div>
+                            <div class="result-subtitle">Here's your video transformed in the selected style</div>
+                            
+                            <div class="video-result">
+                                <video id="resultVideo" controls style="width: 100%; max-width: 600px; border-radius: 12px;">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                            
+                            <div class="result-actions">
+                                <button class="download-btn" onclick="downloadVideo()">Download Video</button>
+                                <button class="new-edit-btn" onclick="showWelcome()">Create New Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Overlay -->
+                <div id="loadingOverlay" style="display: none;">
+                    <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Processing your video...</div>
+                        <div class="loading-subtext">This may take a few moments</div>
+                    </div>
+                </div>
+
+                <!-- Message Display -->
+                <div id="messageDisplay" class="message-display" style="display: none;"></div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input-wrapper">
+                        
+                        <!-- Left controls -->
+                        <div class="input-controls-left">
+                            <button class="input-action-btn" onclick="handleAction('upload-files')">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            </button>
+                        </div>
+
+                        <!-- Textarea Input -->
+                        <textarea 
+                            class="chat-input" 
+                            id="chatInput"
+                            placeholder="Upload Your Raw Video Recording and Get A Professionally Edited Video"
+                            rows="1"
+                            onkeydown="handleKeyPress(event)"
+                        ></textarea>
+
+                        <!-- Right controls -->
+                        <div class="input-controls-right-cluster">
+                            <button class="tools-btn" onclick="handleAction('ai-tools')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
+                                </svg>
+                                <span>Tools</span>
+                            </button>
+                            <button class="send-btn" onclick="sendMessage()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                    <polyline points="12 5 19 12 12 19"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CSRF Token for Django -->
+            {% csrf_token %}
+
+            <!-- Load JavaScript -->
+            <script src="{% static 'js/app.js' %}"></script>
+
+            <script>
+                // Global variables
+                let currentVideoFile = null;
+                let currentStyle = null;
+
+                // Show welcome screen
+                function showWelcome() {
+                    hideAllSections();
+                    document.getElementById('welcomeScreen').style.display = 'block';
+                }
+
+                // Start upload process
+                function startUpload() {
+                    hideAllSections();
+                    document.getElementById('videoUploadSection').style.display = 'block';
+                }
+
+                // Show style templates
+                function showTemplates() {
+                    hideAllSections();
+                    document.getElementById('styleSelectionSection').style.display = 'block';
+                }
+
+                // Handle video file selection
+                function handleVideoSelect() {
+                    const fileInput = document.getElementById('videoUpload');
+                    if (fileInput.files.length > 0) {
+                        currentVideoFile = fileInput.files[0];
+                        showTemplates();
+                    }
+                }
+
+                // Select style and process video
+                function selectStyle(style) {
+                    if (style === 'custom') {
+                        showMessage('🚧 Custom video editing is temporarily unavailable due to high API demand. Try Alex, Iman, or Gary styles!');
+                        return;
+                    }
+
+                    if (!currentVideoFile) {
+                        showMessage('Please upload a video first!');
+                        return;
+                    }
+
+                    currentStyle = style;
+                    processVideo(style);
+                }
+
+                // Process video with selected style
+                async function processVideo(style) {
+                    showLoading();
                     
-                    <!-- Left controls -->
-                    <div class="input-controls-left">
-                        <button class="input-action-btn" onclick="handleAction('upload-files')">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </button>
-                    </div>
+                    const formData = new FormData();
+                    formData.append('style', style);
+                    formData.append('video', currentVideoFile);
+                    
+                    // Get CSRF token
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                    
+                    try {
+                        const response = await fetch('/process-video/', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrfToken,
+                            }
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            // Show result with edited video
+                            showResult(result.edited_video_url, result.message);
+                        } else {
+                            showMessage(result.message || 'Processing failed!');
+                        }
+                    } catch (error) {
+                        console.error('Error:', error);
+                        showMessage('Network error. Please try again.');
+                    } finally {
+                        hideLoading();
+                    }
+                }
 
-                    <!-- Textarea Input -->
-                    <textarea 
-                        class="chat-input" 
-                        id="chatInput"
-                        placeholder="Upload Your Raw Video Recording and Get A Professionally Edited Video"
-                        rows="1"
-                        onkeydown="handleKeyPress(event)"
-                    ></textarea>
+                // Show result with edited video
+                function showResult(videoUrl, message) {
+                    hideAllSections();
+                    const resultVideo = document.getElementById('resultVideo');
+                    resultVideo.src = videoUrl;
+                    resultVideo.load();
+                    document.getElementById('resultSection').style.display = 'block';
+                    
+                    if (message) {
+                        showMessage(message);
+                    }
+                }
 
-                    <!-- Right controls -->
-                    <div class="input-controls-right-cluster">
-                        <button class="tools-btn" onclick="handleAction('ai-tools')">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="3"></circle>
-                                <path d="M12 1v6m0 6v6m9-9h-6m-6 0H3"></path>
-                            </svg>
-                            <span>Tools</span>
-                        </button>
-                        <button class="send-btn" onclick="sendMessage()">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                <polyline points="12 5 19 12 12 19"></polyline>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+                // Show loading overlay
+                function showLoading() {
+                    document.getElementById('loadingOverlay').style.display = 'flex';
+                }
 
-        <!-- Load JavaScript -->
-        <script src="{% static 'js/app.js' %}"></script>
-    </body>
-    </html>
+                function hideLoading() {
+                    document.getElementById('loadingOverlay').style.display = 'none';
+                }
+
+                // Show message
+                function showMessage(message) {
+                    const messageDiv = document.getElementById('messageDisplay');
+                    messageDiv.textContent = message;
+                    messageDiv.style.display = 'block';
+                    
+                    // Auto-hide after 5 seconds
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 5000);
+                }
+
+                // Hide all sections
+                function hideAllSections() {
+                    const sections = [
+                        'welcomeScreen',
+                        'videoUploadSection', 
+                        'styleSelectionSection',
+                        'resultSection'
+                    ];
+                    
+                    sections.forEach(section => {
+                        document.getElementById(section).style.display = 'none';
+                    });
+                    
+                    document.getElementById('messageDisplay').style.display = 'none';
+                }
+
+                // Download video (placeholder)
+                function downloadVideo() {
+                    showMessage('Download feature coming soon!');
+                }
+
+                // Show help
+                function showHelp() {
+                    showMessage('Need help? Contact support@zuckky.com');
+                }
+
+                // Initialize
+                document.addEventListener('DOMContentLoaded', function() {
+                    showWelcome();
+                });
+            </script>
+        </body>
+</html>
 {% endblock %}

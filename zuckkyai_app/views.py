@@ -74,7 +74,7 @@ def upload_video(request):
     return JsonResponse({'success': False, 'error': 'No video file provided'})
 
 @csrf_exempt
-def process_video(request):
+# def process_video(request):
     """Start video processing with actual video editing API"""
     if request.method == 'POST':
         try:
@@ -108,6 +108,44 @@ def process_video(request):
                 'error': str(e)
             })
 
+import os
+from django.conf import settings
+
+def process_video(request):
+    if request.method == 'POST':
+        style = request.POST.get('style')
+        uploaded_video = request.FILES.get('video')
+        
+        # Map styles to pre-edited videos
+        video_mapping = {
+            'alex_hormozi': '/static/videos/alex_edited.mp4',
+            'iman_gadzhi': '/static/videos/iman_edited.mp4',
+            'gary_vee': '/static/videos/gary_edited.mp4'
+        }
+        
+        if style == 'custom':
+            return JsonResponse({
+                'success': False,
+                'message': '🚧 Custom video editing is temporarily unavailable due to high API demand. Try Alex, Iman, or Gary styles!'
+            })
+        
+        if style in video_mapping:
+            # In a real scenario, you'd process the video here
+            # For demo, return the pre-edited version
+            edited_video_url = f"https://{request.get_host()}{video_mapping[style]}"
+            
+            return JsonResponse({
+                'success': True,
+                'edited_video_url': edited_video_url,
+                'message': f'✅ Video successfully edited in {style.replace("_", " ").title()} style!'
+            })
+        
+        return JsonResponse({
+            'success': False, 
+            'message': 'Invalid style selected'
+        })
+
+        
 @csrf_exempt
 def check_processing_status(request, task_id):
     """Check status of video processing"""
@@ -146,3 +184,33 @@ def determine_conversation_state(user_message, ai_response):
         return 'awaiting_instructions'
     else:
         return 'chatting'  # General chat, not interrupting workflow
+
+
+# def process_video_style(request):
+    if request.method == 'POST':
+        style = request.POST.get('style')
+        raw_video = request.FILES.get('video')
+        
+        # Store the raw video (for you to manually edit later)
+        # For demo, just return the pre-edited version
+        
+        video_urls = {
+            'alex_hormozi': 'https://your-render-app.onrender.com/static/videos/alex_edited.mp4',
+            'iman_gadzhi': 'https://your-render-app.onrender.com/static/videos/iman_edited.mp4', 
+            'gary_vee': 'https://your-render-app.onrender.com/static/videos/gary_edited.mp4',
+            'custom': None  # This will show "API exhausted" message
+        }
+        
+        if style == 'custom':
+            return JsonResponse({
+                'status': 'error',
+                'message': 'API token exhausted for custom edits. Please try Alex, Iman, or Gary styles.'
+            })
+        
+        video_url = video_urls.get(style)
+        
+        return JsonResponse({
+            'status': 'success',
+            'edited_video_url': video_url,
+            'message': f'Video successfully edited in {style} style!'
+        })

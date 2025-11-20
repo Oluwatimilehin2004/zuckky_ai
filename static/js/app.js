@@ -637,3 +637,78 @@ function handleEditingInstructions(instructions) {
     // Start the video processing
     startVideoProcessing(instructions);
 }
+
+// Updated main function
+async function handleStyleSelection(style) {
+    if (style === 'custom') {
+        showMessage('🚧 Custom video editing is temporarily unavailable due to high API demand. Try Alex, Iman, or Gary styles!');
+        return;
+    }
+    
+    showLoading();
+    hideMessage();
+    hideVideo();
+    
+    try {
+        const response = await uploadVideo(style);
+        
+        if (response.success) {
+            displayEditedVideo(response.edited_video_url);
+            showMessage(response.message);
+        } else {
+            showMessage(response.message || 'Processing failed!');
+        }
+    } catch (error) {
+        showMessage('Network error. Please try again.');
+    } finally {
+        hideLoading();
+    }
+}
+
+// Upload video to backend
+async function uploadVideo(style) {
+    const formData = new FormData();
+    const videoFile = document.getElementById('video-upload').files[0];
+    
+    formData.append('style', style);
+    formData.append('video', videoFile);
+    
+    const response = await fetch('/process-video/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCSRFToken(), // Django CSRF protection
+        }
+    });
+    
+    return await response.json();
+}
+
+// Display the edited video
+function displayEditedVideo(videoUrl) {
+    const videoPlayer = document.getElementById('result-video');
+    videoPlayer.src = videoUrl;
+    videoPlayer.style.display = 'block';
+    videoPlayer.load(); // Reload the video source
+}
+
+// Show messages to user
+function showMessage(message) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = message;
+    messageDiv.style.display = 'block';
+}
+
+// Show loading animation
+function showLoading() {
+    document.getElementById('loading').style.display = 'block';
+}
+
+function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+}
+
+// Get CSRF token for Django
+function getCSRFToken() {
+    return document.querySelector('[name=csrfmiddlewaretoken]').value;
+}

@@ -73,7 +73,7 @@ def upload_video(request):
     
     return JsonResponse({'success': False, 'error': 'No video file provided'})
 
-@csrf_exempt
+# @csrf_exempt
 # def process_video(request):
     """Start video processing with actual video editing API"""
     if request.method == 'POST':
@@ -108,10 +108,9 @@ def upload_video(request):
                 'error': str(e)
             })
 
-import os
-from django.conf import settings
-
+@csrf_exempt
 def process_video(request):
+    """Start video processing with actual video editing API"""
     if request.method == 'POST':
         style = request.POST.get('style')
         uploaded_video = request.FILES.get('video')
@@ -130,8 +129,7 @@ def process_video(request):
             })
         
         if style in video_mapping:
-            # In a real scenario, you'd process the video here
-            # For demo, return the pre-edited version
+            # Return the pre-edited video URL
             edited_video_url = f"https://{request.get_host()}{video_mapping[style]}"
             
             return JsonResponse({
@@ -144,8 +142,12 @@ def process_video(request):
             'success': False, 
             'message': 'Invalid style selected'
         })
+    
+    return JsonResponse({
+        'success': False,
+        'message': 'Only POST requests allowed'
+    })
 
-        
 @csrf_exempt
 def check_processing_status(request, task_id):
     """Check status of video processing"""

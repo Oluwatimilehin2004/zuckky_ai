@@ -15,6 +15,7 @@ let uploadedMainVideo = '';
 let uploadedReferenceVideo = '';
 let processingInterval = null;
 let processingStepIndex = -1;
+let selectedStyle = ''; // Add this global variable
 
 const API_BASE = '/api';
 
@@ -266,19 +267,19 @@ function showTemplateSelection() {
         <div class="message-avatar">🤖</div>
         <div class="message-content" style="max-width: 90%;">
             <div class="template-grid">
-                <div class="template-card" onclick="selectTemplate('Alex Hormozi')">
+                <div class="template-card" onclick="selectTemplate('alex_hormozi')">
                     <div class="template-name">⚡ Alex Hormozi</div>
                     <div class="template-desc">Fast cuts, bold captions, high energy.</div>
                 </div>
-                <div class="template-card" onclick="selectTemplate('Iman Gadzhi')">
+                <div class="template-card" onclick="selectTemplate('iman_gadzhi')">
                     <div class="template-name">🎯 Iman Gadzhi</div>
                     <div class="template-desc">Cinematic, smooth B-roll integration.</div>
                 </div>
-                <div class="template-card" onclick="selectTemplate('Gary Vee')">
+                <div class="template-card" onclick="selectTemplate('gary_vee')">
                     <div class="template-name">🔥 Gary Vee</div>
                     <div class="template-desc">Raw, authentic feel with subtle cuts.</div>
                 </div>
-                <div class="template-card custom-style" onclick="selectTemplate('Custom')">
+                <div class="template-card custom-style" onclick="selectTemplate('custom')">
                     <div class="template-name">✨ Create Your Own Unique Style</div>
                     <div class="template-desc">Train the AI with your reference video.</div>
                 </div>
@@ -292,9 +293,10 @@ function showTemplateSelection() {
 // Update your selectTemplate function to manage state properly
 function selectTemplate(template) {
     selectedTemplate = template;
-    addUserMessage(`${template} Style Selected`);
+    selectedStyle = template; // Store the selected style globally
+    addUserMessage(`${template.replace('_', ' ').toUpperCase()} Style Selected`);
     
-    if (template === 'Custom') {
+    if (template === 'custom') {
         setTimeout(() => {
             addAIMessage("Awesome choice! Creating a custom style makes your content unique. Please upload a reference video that has the editing style you want to replicate.");
             showReferenceVideoUpload();
@@ -302,7 +304,7 @@ function selectTemplate(template) {
         }, 500);
     } else {
         setTimeout(() => {
-            addAIMessage(`Perfect! The ${template} style is amazing for viral content! 🎯\n\nNow, what specific instructions would you like me to apply? For example:\n• Add dynamic captions\n• Include background music\n• Create quick cuts\n• Add transitions\n• Any other special requests?`);
+            addAIMessage(`Perfect! The ${template.replace('_', ' ')} style is amazing for viral content! 🎯\n\nNow, what specific instructions would you like me to apply? For example:\n• Add dynamic captions\n• Include background music\n• Create quick cuts\n• Add transitions\n• Any other special requests?`);
             conversationState = CONVERSATION_STATES.AWAITING_INSTRUCTIONS;
         }, 500);
     }
@@ -469,13 +471,29 @@ function startSequentialProcessing() {
             timeEl.textContent = '100% Complete 🎉';
 
             setTimeout(() => {
+                // Get the actual video URL based on selected style
+                const videoUrl = getVideoUrlForSelectedStyle();
+                
                 const finalMsg = document.createElement('div');
                 finalMsg.className = 'message ai';
                 finalMsg.innerHTML = `
                     <div class="message-avatar">🤖</div>
-                    <div class="message-content">Your Viral Video is ready! <br><br>
-                    <a href="#" style="color:#58CC02; text-decoration: underline;">➡️ Click to View Final Edit</a> | 
-                    <a href="#" style="color:#58CC02; text-decoration: underline;">⬇️ Download Video (MP4)</a>
+                    <div class="message-content">
+                        <strong>🎉 Your Viral Video is ready!</strong><br><br>
+                        <div style="margin: 15px 0;">
+                            <video controls style="width: 100%; max-width: 400px; border-radius: 8px;">
+                                <source src="${videoUrl}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <a href="${videoUrl}" download class="download-btn" style="background: #58CC02; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none;">
+                                ⬇️ Download Video
+                            </a>
+                            <button onclick="startNewEdit()" class="new-edit-btn" style="background: #007AFF; color: white; padding: 8px 16px; border-radius: 6px; border: none; cursor: pointer;">
+                                ✨ Create New Edit
+                            </button>
+                        </div>
                     </div>
                 `;
                 messagesContainer.appendChild(finalMsg);
@@ -485,6 +503,35 @@ function startSequentialProcessing() {
         }
 
     }, intervalDuration);
+}
+
+// Add this function to get the correct video URL
+function getVideoUrlForSelectedStyle() {
+    const styleMap = {
+        'alex_hormozi': '/static/videos/alex_edited.mp4',
+        'iman_gadzhi': '/static/videos/iman_edited.mp4', 
+        'gary_vee': '/static/videos/gary_edited.mp4',
+        'custom': '/static/videos/alex_edited.mp4' // Fallback for custom
+    };
+    
+    // Get the selected style from your global variable
+    const selectedStyle = window.selectedStyle || 'alex_hormozi'; // Default fallback
+    
+    return styleMap[selectedStyle] || styleMap['alex_hormozi'];
+}
+
+// Function to start new edit
+function startNewEdit() {
+    // Clear chat messages and reset state
+    document.getElementById('chatMessages').innerHTML = '';
+    conversationState = 'idle';
+    window.selectedStyle = null;
+    selectedTemplate = '';
+    uploadedMainVideo = '';
+    uploadedReferenceVideo = '';
+    
+    // Show welcome screen again
+    showWelcome();
 }
 
 // Main Chat Function
@@ -562,35 +609,18 @@ function handleTemplateSelection(message) {
     const messageLower = message.toLowerCase();
     
     if (messageLower.includes('alex') || messageLower.includes('hormozi')) {
-        selectTemplate('Alex Hormozi');
+        selectTemplate('alex_hormozi');
     } else if (messageLower.includes('iman') || messageLower.includes('gadzhi')) {
-        selectTemplate('Iman Gadzhi');
+        selectTemplate('iman_gadzhi');
     } else if (messageLower.includes('gary') || messageLower.includes('vee')) {
-        selectTemplate('Gary Vee');
+        selectTemplate('gary_vee');
     } else if (messageLower.includes('custom')) {
-        selectTemplate('Custom');
+        selectTemplate('custom');
     } else {
         // If we can't determine, show templates again
         addAIMessage("I'm not sure which style you meant. Please select from these viral templates:");
         showTemplateSelection();
     }
-}
-
-// Start the actual video processing
-function startVideoProcessing(instructions = '') {
-    console.log('🚀 Starting video processing with:', {
-        mainVideo: uploadedMainVideo,
-        referenceVideo: uploadedReferenceVideo,
-        template: selectedTemplate,
-        instructions: instructions
-    });
-    
-    // Show processing UI
-    startSequentialProcessing();
-    conversationState = CONVERSATION_STATES.PROCESSING;
-    
-    // In a real app, you would call your video processing API here
-    // For now, we'll use the simulated processing
 }
 
 // Start the actual video processing
@@ -636,33 +666,6 @@ function handleEditingInstructions(instructions) {
     
     // Start the video processing
     startVideoProcessing(instructions);
-}
-
-// Updated main function
-async function handleStyleSelection(style) {
-    if (style === 'custom') {
-        showMessage('🚧 Custom video editing is temporarily unavailable due to high API demand. Try Alex, Iman, or Gary styles!');
-        return;
-    }
-    
-    showLoading();
-    hideMessage();
-    hideVideo();
-    
-    try {
-        const response = await uploadVideo(style);
-        
-        if (response.success) {
-            displayEditedVideo(response.edited_video_url);
-            showMessage(response.message);
-        } else {
-            showMessage(response.message || 'Processing failed!');
-        }
-    } catch (error) {
-        showMessage('Network error. Please try again.');
-    } finally {
-        hideLoading();
-    }
 }
 
 // Upload video to backend
@@ -712,3 +715,9 @@ function hideLoading() {
 function getCSRFToken() {
     return document.querySelector('[name=csrfmiddlewaretoken]').value;
 }
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Zuckky AI Video Editor initialized');
+    showWelcome();
+});

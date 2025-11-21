@@ -64,7 +64,7 @@ uploads/
 processed/
 
 # Static files (if collected)
-# staticfiles/
+staticfiles/
 
 # IDE
 .vscode/

@@ -82,7 +82,7 @@ ehthumbs.db
 Thumbs.db
 
 # Large files
-*.mp4
+# *.mp4
 *.mov
 *.avi
 *.mkv
